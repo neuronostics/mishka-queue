@@ -1,11 +1,12 @@
 import logging
 import signal
 import time
-from typing import Any, Optional, Set
+from typing import Any, Callable, Optional, Set
 import os
 
 from django.core.management.base import BaseCommand
 from django.db import connection
+from django.utils import autoreload
 
 from .exceptions import PgqException, PgqNoDefinedQueue
 from .queue import Queue
@@ -27,6 +28,11 @@ class Worker(BaseCommand):
             "--listen",
             action="store_true",
             help="Use LISTEN/NOTIFY to wait for events.",
+        )
+        parser.add_argument(
+            "--reload",
+            action="store_true",
+            help="Use django autoreload to listen for code changes.",
         )
 
     def handle_shutdown(self, sig: Any, frame: Any) -> None:
@@ -77,6 +83,14 @@ class Worker(BaseCommand):
 
         self.delay: int = options["delay"]
         self.listen: bool = options["listen"]
+        if options["reload"]:
+            with_reload = autoreload.run_with_reloader
+        else:
+
+            def no_reload(main_func: Callable[..., Any], *args, **kwargs) -> None:
+                main_func(*args, **kwargs)
+
+            with_reload = no_reload
 
         if self.queue is None:
             raise PgqNoDefinedQueue
@@ -92,8 +106,7 @@ class Worker(BaseCommand):
             signal.signal(signal.SIGTERM, self.handle_shutdown)
 
             while True:
-                self.run_available_tasks()
-                self.wait()
+                with_reload(self.run_wait)
         except InterruptedError:
             # got shutdown signal
             pass
@@ -106,3 +119,7 @@ class Worker(BaseCommand):
         else:
             time.sleep(self.delay)
             return 1
+
+    def run_wait(self):
+        self.run_available_tasks()
+        self.wait()
