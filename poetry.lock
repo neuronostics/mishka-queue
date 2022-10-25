@@ -134,7 +134,7 @@ typing-extensions = "*"
 name = "dunamai"
 version = "1.13.2"
 description = "Dynamic version generation"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.5,<4.0"
 
@@ -240,7 +240,7 @@ setuptools = "*"
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -331,7 +331,7 @@ python-versions = ">=3.6"
 name = "pyparsing"
 version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6.8"
 
@@ -465,7 +465,7 @@ testing = ["coverage (>=6.2)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9151dcfb06469c7557644e7b9f692f0f124b13452965a3a518674a7fa2443058"
+content-hash = "32979c9d8fff243308c4316a9c97155dc0739a5b8b13b0e7a93a9b1fee7f7396"
 
 [metadata.files]
 asgiref = [
