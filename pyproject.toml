@@ -10,7 +10,6 @@ packages = [{include = "pgq"}]
 [tool.poetry.dependencies]
 python = "^3.8"
 django = ">=3.2"
-dunamai = "^1.13.2"
 
 [tool.poetry.group.dev.dependencies]
 django-stubs = {extras = ["compatible-mypy"], version = "^1.12.0"}
@@ -21,6 +20,7 @@ black = "^22.10.0"
 tox = "*"
 flake8 = "*"
 pre-commit = "^2.20.0"
+dunamai = "^1.13.2"
 
 [tool.poetry-dynamic-versioning]
 enable = true
