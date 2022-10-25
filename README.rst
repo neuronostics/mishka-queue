@@ -1,10 +1,11 @@
-django-pg-queue
+Mishka Queue - A django task queue
 =====================
 
-django-pg-queue is a task queue system for Django backed by postgres.
+Mishka queue is a task queue system for Django backed by postgres.
 
-It was forked from the wonderful and simpler django-postgres-queue (https://github.com/gavinwahl/django-postgres-queue/)
-Written by Gavin Wahl.
+It was forked from:
+- https://github.com/SweetProcess/django-pg-queue/, which in turn was forked from
+- https://github.com/gavinwahl/django-postgres-queue/ by Gavin Wahl.
 
 
 Why postgres?
@@ -106,7 +107,7 @@ work will commit or rollback together).
 Comparison to Celery
 --------------------
 
-django-pg-queue fills the same role as Celery. You must use postgres as the backend
+mishka queue fills the same role as Celery. You must use postgres as the backend
 and the library is small enough that you can read and understand all the code.
 
 
