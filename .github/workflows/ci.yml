@@ -25,6 +25,11 @@ jobs:
         with:
           python-version: ${{ env.DEFAULT_PYTHON_VERSION }}
           cache: "poetry"
+
+      - name: Poetry lockfile freshness
+        run: |
+          poetry lock --check
+
       - name: Install Dependencies
         run: poetry install --sync
 
