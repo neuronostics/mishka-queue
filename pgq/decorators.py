@@ -1,16 +1,16 @@
 import copy
 import datetime
-from dataclasses import dataclass
 import functools
 import logging
 import random
-from typing import Any, Callable, Dict, Optional, Type, TYPE_CHECKING
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type
 
 from django.db import transaction
 
 if TYPE_CHECKING:
-    from .queue import Queue
     from .models import BaseJob
+    from .queue import Queue
 
     DelayFnType = Callable[[int], datetime.timedelta]
     TaskFnType = Callable[[Queue, BaseJob], Any]

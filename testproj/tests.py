@@ -6,11 +6,11 @@ from django.db import transaction
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 
-from pgq.decorators import task, JobMeta
-from pgq.exceptions import PgqException
-from pgq.models import Job, DEFAULT_QUEUE_NAME
-from pgq.queue import AtLeastOnceQueue, AtMostOnceQueue, BaseQueue, Queue
 from pgq.commands import Worker
+from pgq.decorators import JobMeta, task
+from pgq.exceptions import PgqException
+from pgq.models import DEFAULT_QUEUE_NAME, Job
+from pgq.queue import AtLeastOnceQueue, AtMostOnceQueue, BaseQueue, Queue
 
 from .models import AltJob
 
@@ -91,7 +91,11 @@ class PgqQueueTests(TestCase):
             task_name,
             [
                 {"args": {"count": 5}},
-                {"args": {"count": 7}, "priority": 10, "execute_at": day_from_now,},
+                {
+                    "args": {"count": 7},
+                    "priority": 10,
+                    "execute_at": day_from_now,
+                },
             ],
         )
         jobs = Job.objects.all()
@@ -152,7 +156,11 @@ class PgqQueueTests(TestCase):
         self.assertEqual(AltJob.objects.count(), 0)
 
         jobs = queue.bulk_enqueue(
-            "demotask", [{"args": {"count": 5}}, {"args": {"count": 7}},],
+            "demotask",
+            [
+                {"args": {"count": 5}},
+                {"args": {"count": 7}},
+            ],
         )
 
         self.assertEqual(AltJob.objects.count(), 2)
@@ -245,7 +253,11 @@ class PgqTransactionTests(TransactionTestCase):
             "demotask",
             [
                 {"args": {"count": 5}},
-                {"args": {"count": 7}, "priority": 10, "execute_at": now,},
+                {
+                    "args": {"count": 7},
+                    "priority": 10,
+                    "execute_at": now,
+                },
             ],
         )
 
@@ -306,6 +318,7 @@ class PgqTransactionTests(TransactionTestCase):
         being committed before the exception is raised (so the job has
         already been popped from the db as successful).
         """
+
         def failuretask(queue: Queue, job: Job):
             transaction.on_commit(lambda: 1 / 0)
             return None
@@ -335,7 +348,9 @@ class PgqTransactionTests(TransactionTestCase):
             transaction.on_commit(lambda: 1 / 0)
             return None
 
-        test_queue = AtLeastOnceQueue(tasks={"failuretask": failuretask}, queue=queue_name)
+        test_queue = AtLeastOnceQueue(
+            tasks={"failuretask": failuretask}, queue=queue_name
+        )
 
         test_queue.enqueue("failuretask")
         self.assertEqual(Job.objects.count(), 1)

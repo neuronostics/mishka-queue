@@ -104,9 +104,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 
@@ -142,7 +148,14 @@ LOGGING = {
         "verbose": {
             "format": "%(levelname)s %(asctime)s %(name)s %(process)d: %(message)s",
         },
-        "simple": {"format": "%(levelname)s %(message)s",},
+        "simple": {
+            "format": "%(levelname)s %(message)s",
+        },
     },
-    "loggers": {"pgq": {"handlers": ["console"], "level": "DEBUG",},},
+    "loggers": {
+        "pgq": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
 }

@@ -5,25 +5,24 @@ import logging
 import select
 import time
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Dict,
-    Iterable,
     Generic,
+    Iterable,
     List,
     Optional,
     Sequence,
     Tuple,
     Type,
     TypeVar,
-    TYPE_CHECKING,
 )
 
 from django.db import connection, transaction
 
 from .exceptions import PgqException
-from .models import BaseJob, Job, DEFAULT_QUEUE_NAME
-
+from .models import DEFAULT_QUEUE_NAME, BaseJob, Job
 
 _Job = TypeVar("_Job", bound=BaseJob)
 # mypy doesn't support binding to BaseQueue[_Job] and may never do so...
@@ -82,7 +81,12 @@ class BaseQueue(Generic[_Job], metaclass=abc.ABCMeta):
             job,
             time.time() - start_time,
             retval,
-            extra={"data": {"job": job.to_json(), "retval": retval,}},
+            extra={
+                "data": {
+                    "job": job.to_json(),
+                    "retval": retval,
+                }
+            },
         )
         return retval
 
@@ -183,7 +187,13 @@ class BaseQueue(Generic[_Job], metaclass=abc.ABCMeta):
                 )
                 if job:
                     self.logger.debug(
-                        "Claimed %r.", job, extra={"data": {"job": job.to_json(),}}
+                        "Claimed %r.",
+                        job,
+                        extra={
+                            "data": {
+                                "job": job.to_json(),
+                            }
+                        },
                     )
                     return job, self.run_job(job)
                 else:

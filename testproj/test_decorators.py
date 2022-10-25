@@ -3,9 +3,9 @@ from typing import Any
 from django.contrib.auth.models import Group
 from django.test import TestCase
 
-from pgq.decorators import task, JobMeta
+from pgq.decorators import JobMeta, task
 from pgq.models import Job
-from pgq.queue import AtLeastOnceQueue, AtMostOnceQueue, Queue
+from pgq.queue import AtLeastOnceQueue, Queue
 
 
 class PgqDecoratorsTests(TestCase):

@@ -4,7 +4,6 @@ import django.contrib.postgres.fields.jsonb
 import django.contrib.postgres.functions
 from django.db import migrations, models
 
-
 try:
     from django.db.models import JSONField
 except ImportError:

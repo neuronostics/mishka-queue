@@ -1,0 +1,33 @@
+# See https://pre-commit.com/ for usage and config
+repos:
+  - repo: local
+    hooks:
+      # Ensure poetry installed package versions are up-to-date with lockfile
+      - id: poetry-install
+        name: poetry-install
+        stages: [commit]
+        language: system
+        entry: poetry install
+        pass_filenames: false
+        always_run: true
+
+      - id: isort
+        name: isort
+        stages: [commit]
+        language: system
+        entry: poetry run isort
+        types: [python]
+
+      - id: black
+        name: black
+        stages: [commit]
+        language: system
+        entry: poetry run black
+        types: [python]
+
+      - id: black
+        name: black
+        stages: [commit]
+        language: system
+        entry: poetry run flake8
+        types: [python]

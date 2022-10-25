@@ -1,8 +1,7 @@
 from typing import Any, Dict, Iterable, Optional, Sequence, Type, TypeVar
 
-from django.db import models
-from django.db import connection
 from django.contrib.postgres.functions import TransactionNow
+from django.db import connection, models
 
 try:
     from django.db.models import JSONField
