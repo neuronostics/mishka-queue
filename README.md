@@ -73,7 +73,7 @@ it has some compelling advantages.
 
 # How it works
 
-django-pg-queue is able to claim, process, and remove a task in a single
+mishka-queue is able to claim, process, and remove a task in a single
 (simplified) query.
 
 ``` sql
@@ -114,7 +114,7 @@ A failure in an `on_commit()` callback will not cause that job to be
 retried when using an `AtLeastOnceQueue` (usually a job in an
 `AtLeastOnceQueue` queue will remain in the queue if the job fails).
 This is because `on_commit()` callbacks are executed after the
-transaction has been committed and, for django-pg-queue, the job is
+transaction has been committed and, for mishka-queue, the job is
 removed from the queue when the transaction commits.
 
 If you require more certainty that the code in an `on_commit()` callback
@@ -125,14 +125,14 @@ call it from within the job rather than using `on_commit()`.
 
 # Requirements
 
-django-pg-queue requires Python 3, at least postgres 9.5 and at least
+mishka-queue requires Python 3, at least postgres 9.5 and at least
 Django 2.1.
 
 # Installation
 
 Install with pip:
 
-    pip install django-pg-queue
+    pip install mishka-queue
 
 Then add `'pgq'` to your `INSTALLED_APPS`. Run `manage.py migrate` to
 create the jobs table.
@@ -156,7 +156,7 @@ You will need to import this queue instance to queue or process tasks.
 Use `AtLeastOnceQueue` for at-least-once delivery, or `AtMostOnceQueue`
 for at-most-once delivery.
 
-django-pg-queue comes with a management command base class that you can
+mishka-queue comes with a management command base class that you can
 use to consume your tasks. It can be called whatever you like, for
 example in a `someapp/managment/commands/worker.py`:
 
@@ -289,7 +289,7 @@ full list of tasks in progress if you want.
 
 # Logging
 
-django-pg-queue logs through Python's logging framework, so can be
+mishka-queue logs through Python's logging framework, so can be
 configured with the `LOGGING` dict in your Django settings. It will not
 log anything under the default config, so be sure to configure some form
 of logging. Everything is logged under the `pgq` namespace. Here is an
@@ -366,12 +366,12 @@ You could also log to a file by using the built-in
 ## Useful Recipes
 
 These recipes aren't officially supported features of <span
-class="title-ref">django-pg-queue</span>. We provide them so that you
+class="title-ref">mishka-queue</span>. We provide them so that you
 can mimick some of the common features in other task queues.
 
-# <span class="title-ref">CELERY_ALWAYS_EAGER</span>
+# `CELERY_ALWAYS_EAGER`
 
-Celery uses the <span class="title-ref">CELERY_ALWAYS_EAGER</span>
+Celery uses the `CELERY_ALWAYS_EAGER`
 setting to run a task immediately, without queueing it for a worker. It
 could be used during tests, and while debugging in a development
 environment with any workers turned off.
