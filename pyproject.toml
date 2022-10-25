@@ -5,10 +5,10 @@ description = "Mishka Queue - A django task queue"
 authors = ["Your Name <b.howes@neuronostics.com>"]
 license = "BSD-2"
 readme = "README.md"
-packages = [{include = "mishka_queue"}]
+packages = [{include = "pgq"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 django = ">=3.2"
 dunamai = "^1.13.2"
 
