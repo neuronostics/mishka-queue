@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "mishka-queue"
+version = "0.0.0" # Version is sourced from git tag
+description = "Mishka Queue - A django task queue"
+authors = ["Your Name <b.howes@neuronostics.com>"]
+license = "BSD-2"
+readme = "README.md"
+packages = [{include = "mishka_queue"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = ">=3.2"
+dunamai = "^1.13.2"
+
+[tool.poetry.group.dev.dependencies]
+django-stubs = {extras = ["compatible-mypy"], version = "^1.12.0"}
+psycopg2-binary = "2.8.4"
+typing-extensions = "*"
+isort = "^5.10.1"
+black = "^22.10.0"
+tox = "*"
+flake8 = "*"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"

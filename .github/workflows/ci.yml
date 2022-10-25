@@ -1,0 +1,115 @@
+---
+name: CI
+
+on:
+  push:
+    branches:
+      - "**" # All branches
+    tags-ignore:
+      - "**" # Don't run for any tags
+
+env:
+  POETRY_VERSION: 1.2
+  DEFAULT_PYTHON_VERSION: "3.10"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      # Common setup
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry==${{ env.POETRY_VERSION }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON_VERSION }}"
+          cache: "poetry"
+      - name: Install Dependencies
+        run: poetry install --sync
+
+      - name: Isort
+        run: poetry run isort --check-only .
+
+      - name: Black
+        run: poetry run black --check .
+
+      - name: Flake8
+        run: poetry run flake8 .
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: pgq
+          POSTGRES_PASSWORD: pgq
+          POSTGRES_DB: pgq_testproj
+          TZ: UTC
+          PGTZ: UTC
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    steps:
+      - name: psycopg2 prerequisites
+        run: sudo apt-get install libpq-dev
+      - uses: actions/checkout@v3
+      - name: Install poetry
+        run: pipx install poetry==${{ env.POETRY_VERSION }}
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "poetry"
+      - name: Install Dependencies
+        run: poetry install --sync
+
+      - name: Run tox targets for ${{ matrix.python-version }}
+        run: |
+          PYVERSION=$(python -c "import sys; print(''.join([str(sys.version_info.major), str(sys.version_info.minor)]))")
+          python -m tox -f "py${PYVERSION}"
+
+  tag-release:
+    needs: [lint, test]
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # See: https://medium.com/prompt/trigger-another-github-workflow-without-using-a-personal-access-token-f594c21373ef
+          ssh-key: "${{ secrets.COMMIT_KEY }}"
+
+      - name: Set GitHub Actions as commit author
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - uses: neuronostics/pr-semver-bump@master
+        name: Bump and Tag Version
+        with:
+          mode: bump
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          major-label: semver:major
+          minor-label: semver:minor
+          patch-label: semver:patch
+          with-v: true
+          use-ssh: true
+          require-release: false
