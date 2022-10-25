@@ -48,6 +48,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
+        django: [32,41]
 
     # Service containers to run with `container-job`
     services:
@@ -89,7 +90,7 @@ jobs:
       - name: Run tox targets for ${{ matrix.python-version }}
         run: |
           PYVERSION=$(python -c "import sys; print(''.join([str(sys.version_info.major), str(sys.version_info.minor)]))")
-          python -m tox -f "py${PYVERSION}"
+          poetry run tox -f "py${PYVERSION}"
 
   tag-release:
     needs: [lint, test]
