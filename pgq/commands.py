@@ -52,6 +52,8 @@ class Worker(BaseCommand):
                 job = self.queue.run_once(exclude_ids=failed_tasks)
                 if job is None:
                     # No more jobs
+                    if self._shutdown:
+                        raise InterruptedError
                     return
             except PgqException as e:
                 if e.job is not None:
