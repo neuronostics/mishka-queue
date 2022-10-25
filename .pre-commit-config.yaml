@@ -29,5 +29,5 @@ repos:
         name: black
         stages: [commit]
         language: system
-        entry: poetry run flake8
+        entry: poetry run flake8 pgq/
         types: [python]
