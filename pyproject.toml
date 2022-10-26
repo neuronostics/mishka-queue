@@ -2,8 +2,8 @@
 name = "mishka-queue"
 version = "0.0.0" # Version is sourced from git tag
 description = "Mishka Queue - A django task queue"
-authors = ["Your Name <b.howes@neuronostics.com>"]
-license = "BSD-2"
+authors = ["Ben Howes <b.howes@neuronostics.com>"]
+license = "BSD-2-Clause"
 readme = "README.md"
 packages = [{include = "pgq"}]
 

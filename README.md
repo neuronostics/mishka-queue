@@ -12,7 +12,7 @@ I thought you were never supposed to use an RDBMS as a queue? Well,
 postgres has some features that make it not as bad as you might think,
 it has some compelling advantages.
 
--   Transactional behavior and reliability.
+Transactional behavior and reliability.
 
     Adding tasks is atomic with respect to other database work. There is
     no need to use `transaction.on_commit` hooks and there is no risk of
@@ -125,8 +125,8 @@ call it from within the job rather than using `on_commit()`.
 
 # Requirements
 
-mishka-queue requires Python 3, at least postgres 9.5 and at least
-Django 2.1.
+mishka-queue is tested against python 3.9+, at least postgres 9.5 and at least
+Django 3.2.
 
 # Installation
 
@@ -181,8 +181,8 @@ from pgq.decorators import task
 from .queues import queue
 
 @task(queue)
-def debug_task(queue, job):
-    print(job.args)
+def debug_task(queue, job, args, meta):
+    print(args)
 ```
 
 Instead of using the task decorator, you can manually register it as a
