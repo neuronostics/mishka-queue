@@ -12,7 +12,7 @@ I thought you were never supposed to use an RDBMS as a queue? Well,
 postgres has some features that make it not as bad as you might think,
 it has some compelling advantages.
 
-Transactional behavior and reliability.
+- Transactional behavior and reliability.
 
     Adding tasks is atomic with respect to other database work. There is
     no need to use `transaction.on_commit` hooks and there is no risk of
