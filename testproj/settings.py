@@ -81,6 +81,8 @@ DATABASES = {
         "NAME": "pgq_testproj",
         "USER": "pgq",
         "PASSWORD": "pgq",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
