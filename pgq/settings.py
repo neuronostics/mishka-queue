@@ -8,3 +8,4 @@ from django.conf import settings
 
 
 SHOW_JOBS_ADMIN = getattr(settings, "SHOW_JOBS_ADMIN", True)
+QUEUE_ALWAYS_EAGER = getattr(settings, "QUEUE_ALWAYS_EAGER", False)
