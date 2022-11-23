@@ -23,6 +23,7 @@ from django.db import connection, transaction
 
 from .exceptions import PgqException
 from .models import DEFAULT_QUEUE_NAME, BaseJob, Job
+from .settings import QUEUE_ALWAYS_EAGER
 
 _Job = TypeVar("_Job", bound=BaseJob)
 # mypy doesn't support binding to BaseQueue[_Job] and may never do so...
@@ -205,6 +206,12 @@ class BaseQueue(Generic[_Job], metaclass=abc.ABCMeta):
 
 class Queue(BaseQueue[Job]):
     job_model = Job
+
+    def enqueue(self, *args, **kwargs):
+        job = super().enqueue(*args, **kwargs)
+        if QUEUE_ALWAYS_EAGER:
+            self.run_job(job)
+        return job
 
 
 class AtMostOnceQueue(Queue):
