@@ -119,7 +119,6 @@ class BaseQueue(Generic[_Job], metaclass=abc.ABCMeta):
         kwargs_list: Sequence[Dict[str, Any]],
         batch_size: Optional[int] = None,
     ) -> List[_Job]:
-
         assert task in self.tasks
 
         jobs = self.job_model.objects.bulk_create(
@@ -202,6 +201,10 @@ class BaseQueue(Generic[_Job], metaclass=abc.ABCMeta):
         except Exception as e:
             # Add job info to exception to be accessible for logging.
             raise PgqException(job=job) from e
+
+    def size(self):
+        """Return the number of jobs in the queue."""
+        return self.job_model.objects.filter(queue=self.queue).count()
 
 
 class Queue(BaseQueue[Job]):
