@@ -34,6 +34,16 @@ class PgqQueueTests(TestCase):
         self.assertEqual(job.args["count"], 5)
         self.assertEqual(job.queue, NAME)
 
+    def test_queue_size_helper(self) -> None:
+        """
+        Creates a basic queue with a name, and puts the job onto the queue.
+        """
+        NAME = "machine_a"
+        queue = AtLeastOnceQueue(tasks={"demotask": demotask}, queue=NAME)
+
+        queue.enqueue("demotask", {"count": 5})
+        assert queue.size() == 1
+
     def test_job_contained_to_queue(self) -> None:
         """
         Test that a job added to one queue won't be visible on another queue.

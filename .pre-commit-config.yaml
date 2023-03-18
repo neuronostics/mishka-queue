@@ -7,7 +7,7 @@ repos:
         name: poetry-install
         stages: [commit]
         language: system
-        entry: poetry install
+        entry: poetry install --sync --with dev
         pass_filenames: false
         always_run: true
 
@@ -25,8 +25,8 @@ repos:
         entry: poetry run black
         types: [python]
 
-      - id: black
-        name: black
+      - id: flake8
+        name: flake8
         stages: [commit]
         language: system
         entry: poetry run flake8 pgq/
