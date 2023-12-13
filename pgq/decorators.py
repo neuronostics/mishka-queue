@@ -6,8 +6,6 @@ import random
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type
 
-from django.db import transaction
-
 if TYPE_CHECKING:
     from .models import BaseJob
     from .queue import Queue
@@ -84,10 +82,7 @@ def retry(
 
             try:
                 args = copy.deepcopy(job.args)
-                with transaction.atomic():
-                    result = fn(
-                        queue, job, args["func_args"], JobMetaType(**args["meta"])
-                    )
+                result = fn(queue, job, args["func_args"], JobMetaType(**args["meta"]))
             except Exc as e:
                 retries = job.args["meta"].get("retries", 0)
                 if retries < max_retries:

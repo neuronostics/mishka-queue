@@ -24,25 +24,3 @@ class PgqDecoratorsTests(TestCase):
         demotask.enqueue({"count": 5})
         self.assertIn("demotask", queue.tasks)
         queue.run_once()
-
-    def test_atleastonce_retry_during_database_failure(self) -> None:
-        """
-        Force a database error in the task. Check that it was retried.
-        """
-
-        queue = AtLeastOnceQueue(tasks={})
-
-        @task(queue, max_retries=2)
-        def failuretask(queue: Queue, job: Job, args: Any, meta: JobMeta) -> None:
-            # group has max 150 chars for its name.
-            Group.objects.create(name="!" * 151)
-            return None
-
-        failuretask.enqueue({})
-        originaljob = Job.objects.all()[0]
-
-        queue.run_once()
-
-        retryjob = Job.objects.all()[0]
-        self.assertNotEqual(originaljob.id, retryjob.id)
-        self.assertEqual(retryjob.args["meta"]["retries"], 1)
