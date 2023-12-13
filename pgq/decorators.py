@@ -84,10 +84,9 @@ def retry(
 
             try:
                 args = copy.deepcopy(job.args)
-                with transaction.atomic():
-                    result = fn(
-                        queue, job, args["func_args"], JobMetaType(**args["meta"])
-                    )
+                result = fn(
+                    queue, job, args["func_args"], JobMetaType(**args["meta"])
+                )
             except Exc as e:
                 retries = job.args["meta"].get("retries", 0)
                 if retries < max_retries:
