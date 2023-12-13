@@ -6,8 +6,6 @@ import random
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type
 
-from django.db import transaction
-
 if TYPE_CHECKING:
     from .models import BaseJob
     from .queue import Queue
